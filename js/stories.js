@@ -58,8 +58,10 @@ function submitNewStory() {
   const author = $("#author").val();
   const title = $("#title").val();
   const url = $("#story-url").val();
+  const username = currentUser.username;
+  const storyData = {author, title, url};
 
-  const story = await storyList.addStory(currentUser, storyData);
+  const story = storyList.addStory(currentUser, storyData);
   const $story = generateStoryMarkup(story);
   $allStoriesList.prepend(story);
 
@@ -68,3 +70,10 @@ function submitNewStory() {
 }
 
 $submitStoryForm.on("submit", submitNewStory);
+
+function favoriteStory() {
+  console.debug("favoriteStory");
+
+  const favorite = user.favorites //create favorite in user.favorites property
+
+}

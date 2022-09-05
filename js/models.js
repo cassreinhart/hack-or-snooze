@@ -5,7 +5,7 @@ const tokenn = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRlc3RjcmV
 /******************************************************************************
  * Story: a single story in the system
  */
-
+console.log(BASE_URL);
 class Story {
 
   /** Make instance of Story from data object about story:
@@ -23,9 +23,9 @@ class Story {
 
   /** Parses hostname out of URL and returns it. */
 
-  getHostName(url) { //url input?
-    // UNIMPLEMENTED: complete this function!
-    return "hostname.com";
+  getHostName() {
+    
+    return new URL(this.url).host;
   }
 }
 
