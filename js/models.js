@@ -1,7 +1,7 @@
 "use strict";
 
 const BASE_URL = "https://hack-or-snooze-v3.herokuapp.com";
-
+const tokenn = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRlc3RjcmVpbiIsImlhdCI6MTY2MjM5OTc5MX0.QUbbbP7ZXD0jgS9V9h7n8innsBSLw7NTWrBbjMtLXsw";
 /******************************************************************************
  * Story: a single story in the system
  */
@@ -23,7 +23,7 @@ class Story {
 
   /** Parses hostname out of URL and returns it. */
 
-  getHostName() { //url input?
+  getHostName(url) { //url input?
     // UNIMPLEMENTED: complete this function!
     return "hostname.com";
   }
@@ -73,19 +73,20 @@ class StoryList {
    * Returns the new Story instance
    */
 
-  async addStory(user, newStory) { //requires auth  //what is newStory?
-    // UNIMPLEMENTED: complete this function!
-    const response = await axios.post({
-      url: `${BASE_URL}/stories`, 
-      method: 'POST', 
-      params: {token: User.token }
+  async addStory(user, {author, title, url}) { //requires auth 
+    const token = user.loginToken;
+    const response = await axios({
+      method: "POST",
+      url: `${BASE_URL}/stories`,
+      data: {token, story: {author, title, url}}
     });
-    return new Story = {
-      title: this.title,
-      author: this.author,
-      url: this.url
-    };
-  }
+
+    const story = new Story(response.data.story);
+    this.stories.unshift(story);
+    user.ownStories.unshift(story);
+    
+    return story;
+  } 
 }
 
 
@@ -125,6 +126,7 @@ class User {
    * - password: a new password
    * - name: the user's full name
    */
+  
 
   static async signup(username, password, name) {
     const response = await axios({

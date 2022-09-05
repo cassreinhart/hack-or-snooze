@@ -14,9 +14,18 @@ const $navLogin = $("#nav-login");
 const $navUserProfile = $("#nav-user-profile");
 const $navLogOut = $("#nav-logout");
 
+const $navSubmitStory = $("#nav-submit-story");
+const $navFavorites = $("#nav-favorites");
+const $navMyStories = $("#nav-my-stories");
+
+const $submitStoryForm = $("#submit-story-form");
+const $authorInput = $("#author");
+const $titleInput = $("#title");
+const $urlInput = $("#story-url");
+
 /** To make it easier for individual components to show just themselves, this
  * is a useful function that hides pretty much everything on the page. After
- * calling this, individual components can re-show just what they want.
+ * calling this, individual components can re-show just what they want.           indiv comp....?????
  */
 
 function hidePageComponents() {
@@ -41,7 +50,7 @@ async function start() {
   if (currentUser) updateUIOnUserLogin();
 }
 
-// Once the DOM is entirely loaded, begin the app
+// Once the DOM is entirely loaded, begin the app           ??add evt listener for DOM load??
 
 console.warn("HEY STUDENT: This program sends many debug messages to" +
   " the console. If you don't see the message 'start' below this, you're not" +

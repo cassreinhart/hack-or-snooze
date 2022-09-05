@@ -27,10 +27,18 @@ $navLogin.on("click", navLoginClick);
 
 /** When a user first logins in, update the navbar to reflect that. */
 
-function updateNavOnLogin() {
+function updateNavOnLogin() { //doesn't hide login/create acct forms /////////
   console.debug("updateNavOnLogin");
   $(".main-nav-links").show();
   $navLogin.hide();
   $navLogOut.show();
   $navUserProfile.text(`${currentUser.username}`).show();
 }
+
+function navSubmitClick(evt) {
+  console.debug("navSubmitStoryClick", evt);
+  // hidePageComponents();
+  $submitStoryForm.show();
+}
+
+$navSubmitStory.on("click", navSubmitClick);
