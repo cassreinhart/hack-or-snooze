@@ -51,21 +51,21 @@ function putStoriesOnPage() {
   $allStoriesList.show();
 }
 
-function submitNewStory() {
+function submitNewStory(evt) {
   console.debug("submitNewStory");
   evt.preventDefault();
 
   const author = $("#author").val();
   const title = $("#title").val();
   const url = $("#story-url").val();
-  const username = currentUser.username;
+  const user = currentUser;
   const storyData = {author, title, url};
 
-  const story = storyList.addStory(currentUser, storyData);
+  const story = storyList.addStory(user, storyData);
   const $story = generateStoryMarkup(story);
   $allStoriesList.prepend(story);
 
-  $submitStoryForm.slideUp("slow");
+  $submitStoryForm.slideUp(1000);
   $submitStoryForm.trigger('reset');
 }
 
