@@ -53,28 +53,18 @@ function putStoriesOnPage() {
   $allStoriesList.show();
 }
 
-<<<<<<< HEAD
-async function submitNewStory(evt) {
-=======
 function submitNewStory(evt) {
   console.debug("submitNewStory");
->>>>>>> main
   evt.preventDefault();
   console.debug("submitNewStory");
 
   const author = $("#author").val();
   const title = $("#title").val();
   const url = $("#story-url").val();
-<<<<<<< HEAD
-  const storyData = {author, title, url};
-
-  const story = await storyList.addStory(currentUser, storyData);
-=======
   const user = currentUser;
   const storyData = {author, title, url};
 
   const story = storyList.addStory(user, storyData);
->>>>>>> main
   const $story = generateStoryMarkup(story);
   $allStoriesList.prepend($story);
 
