@@ -53,14 +53,14 @@
 </nav>
 
 <!-- submit story form -->
-<form action="#" id="submit-story-form" class="form-container container" method="post">
+<form id="submit-story-form" class="form-container container hidden">
   author <input type="text" name="author" id="author" placeholder="author name">
   title <input type="text" name="title" id="title" placeholder="story title">
   url <input type="url" name="url" id="story-url" placeholder="story url">
   <button type="submit">submit</button>
 </form>
 
-<hr>
+<hr class="hidden">
 
 <!-- area for stories (all stories, user stories, favorites) -->
 <section class="stories-container container">
@@ -70,6 +70,12 @@
 
   <!-- List of all stories -->
   <ol id="all-stories-list" class="stories-list"></ol>
+
+  <!-- List for favorite stories -->
+  <ol id="#favorites-list" class="favorites-list"></ol>
+
+  <!-- List of currentUser stories -->
+  <ol id="#user-stories"></ol>
 
 </section>
 

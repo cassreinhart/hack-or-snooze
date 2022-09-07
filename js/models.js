@@ -5,7 +5,7 @@ const tokenn = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRlc3RjcmV
 /******************************************************************************
  * Story: a single story in the system
  */
-console.log(BASE_URL);
+
 class Story {
 
   /** Make instance of Story from data object about story:
@@ -87,6 +87,20 @@ class StoryList {
     
     return story;
   } 
+
+  async removeStory(user, story) { ///////////////////////
+    const token = user.loginToken;
+    const storyId = story.storyId;
+    const response = await axios({ //remove from API
+      method: "DELETE",
+      url: `${BASE_URL}/stories/${storyId}`,
+      data: {token}
+    });
+    $(`${storyId}`).remove()//remove from the DOM
+
+    await this.getStories(); //remove from storyList arr
+    putStoriesOnPage(); //not sure if I need to call this function to update the stories
+  }
 }
 
 
@@ -204,5 +218,31 @@ class User {
       console.error("loginViaStoredCredentials failed", err);
       return null;
     }
+  }
+
+  isFavorite(story) { //see getStarHTML -- adds a specific type of star to the DOM (filled/empty)
+    this.favorites.includes(story); 
+  }
+
+  async favoriteStory(story) { //toggle?
+    console.debug("favoriteStory");
+    this.favorites.push(story); //adds story to end favorites array
+    await this._addOrRemoveFav("add", story);
+    //create favorite in user.favorites property
+  }
+  async removeFavorite(story) { //how do we know where in the array the story is that we want to unfav ?????
+    console.debug("removeFavorite");
+    this.favorites.unshift(story); //removes from beginning of favorites array //////// ??
+    await this._addOrRemoveFav("remove", story);
+  }
+
+  async _addOrRemoveFav(newState, story) { //add/remove from API
+    const token = this.loginToken;
+    const method = newState === "add" ? 'POST' : 'DELETE';
+    await axios({
+      url: `${BASE_URL}/users/${this.username}/favorites/${story.storyId}`,
+      method: method,
+      data: {token}
+    }); //do not need to use localStorage because the data is saved in the API under currentUser username
   }
 }

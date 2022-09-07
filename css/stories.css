@@ -37,3 +37,13 @@
 .story-user {
   display: block;
 }
+
+.star, .trash {
+  font-size: .75rem;
+  margin: 0 2px;
+  cursor: pointer;
+}
+
+/* .star::after {
+  font-weight: 900;
+} */
