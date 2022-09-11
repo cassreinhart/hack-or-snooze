@@ -23,6 +23,8 @@ function generateStoryMarkup(story) {
   console.debug("generateStoryMarkup", story);
   const showStar = Boolean(currentUser);
   const hostName = story.getHostName();
+  console.log(currentUser.ownStories);
+  console.log(currentUser.ownStories.includes(story.storyId));
   return $(`
       <li id="${story.storyId}">
       ${showStar ? getStarHTML(story, currentUser) : ""}
@@ -32,24 +34,25 @@ function generateStoryMarkup(story) {
         <small class="story-hostname">(${hostName})</small>
         <small class="story-author">by ${story.author}</small>
         <small class="story-user">posted by ${story.username}</small>
-      ${getTrashCanHTML()}
+      ${currentUser.ownStories.includes(story) ? getTrashCanHTML() : ""}
       </li>
     `);
 }
 
 /** Gets list of stories from server, generates their HTML, and puts on page. */
 
-function putStoriesOnPage() {
+async function putStoriesOnPage() {
   console.debug("putStoriesOnPage");
 
   $allStoriesList.empty();
+  console.log(storyList);
 
   // loop through all of our stories and generate HTML for them
   for (let story of storyList.stories) {
     const $story = generateStoryMarkup(story);
     $allStoriesList.append($story);
   }
-
+  
   $allStoriesList.show();
 }
 
@@ -75,10 +78,8 @@ function submitNewStory(evt) {
 $submitStoryForm.on("submit", submitNewStory);
 
 function getTrashCanHTML() {
-  return `<span class="trash">
-            <i class="fa-solid fa-trash-can">
-            </i>
-          </span>`;
+  return `<i class='fas fa-trash fa-9x' 
+          style='color:#808080'></i>`
 }
 
 function generateFavoriteMarkup(story) {
@@ -99,7 +100,7 @@ function generateFavoriteMarkup(story) {
 }
 
 function getStarHTML(story, user) {
-  const isFav = user.isFavorite(story);
+  const isFav = user.isFavorite(story.storyId);
   const starType = isFav ? "fas" : "far";
   return `<span class="star">
             <i class="${starType} fa-star">
@@ -108,57 +109,31 @@ function getStarHTML(story, user) {
 }
 
 function toggleStar(evt) {
-  console.log("CLICK"); /////this doesn't log, which indicates issue w/click handler
-  const star = evt.target;
-  const story = evt.target.closest('li');
-  const listItemId = story.this.id; //how to extract story from li above?????
-
-  if (isFav) {
-    star.addClass("fas"); //change to "filled" star
-    user.favoriteStory(story); //add story to favorites array ///////////this wont work 
-  } else {
-    star.addClass("far"); //keep as empty star
-    // removeStory(story);
-    user.removeFavorite(story);
-  }
-}
-
-$star.on("click", toggleStar); ///////this isn't working either- issue with selector??
-
-function putFavoritesOnPage() {
-  console.debug("putFavoritesOnPage");
-  hidePageComponents();
-
-  if (!currentUser.favorites) {
-    $favoritesList.append("<h3>No Favorites Yet!</h3>");
-  } else {
-    for (let story of currentUser.favorites) {
-      const $favorite = generateFavoriteMarkup(story);
-      $favoritesList.append($favorite);
-    }
-  }
-
-  $favoritesList.show();
-}
-
-$navFavorites.on("click", putFavoritesOnPage);
-
-$trash.on('click', storyList.removeStory(evt.target.closest('li'))); //////////
-
-function showUserStories(user) {
   evt.preventDefault();
-  const ownStories = user.ownStories;
+  const $target = evt.target;
+  const $star = $target.closest('i');
+  const storyLi = $star.closest('li');
+  console.log(storyLi);
+  const storyId = storyLi.id; 
 
-  hidePageComponents();
-  for (let story of ownStories) {
-    $userStories.append(story);
+  //retrieve story object, use the object to pass into 
+  if ($star.classList.contains("far")) {
+    // $star.closest('i').toggleClass("fas far");
+    $star.classList.remove("far");
+    $star.classList.add("fas"); //change to "filled" star
+    currentUser.favoriteStory(storyId); //add story to favorites array 
+  } else {
+    // $star.closest('i').toggleClass("fas far");
+    $star.classList.remove("fas");
+    $star.classList.add("far"); //keep as empty star
+    currentUser.removeFavorite(storyId);
+    return currentUser.favorites = currentUser.favorites.filter(story => {
+      storyId !== story.id;
+    }); //return new arr
   }
-  // for (let story of storyList) {
-  //   if (story.username === user.username)  {
-  //     $userStories.prepend(story);
-  //   }
-  // }
-  $userStories.show();
 }
+$storiesLists.on("click", ".star", toggleStar);
+// $star.on("click", toggleStar); ///////this isn't working either- issue with selector??
 
-$navMyStories.on('click', showUserStories);
+// $trash.on('click', storyList.removeStory(evt.target.closest('li'))); //////////
+$trash.on('click', storyList.removeStory);

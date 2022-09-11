@@ -54,13 +54,21 @@
 
 <!-- submit story form -->
 <form id="submit-story-form" class="form-container container hidden">
-  author <input type="text" name="author" id="author" placeholder="author name">
-  title <input type="text" name="title" id="title" placeholder="story title">
-  url <input type="url" name="url" id="story-url" placeholder="story url">
+  <div>
+    <label for="author">author</label> 
+    <input type="text" name="author" id="author" placeholder="author name">
+  </div>
+  <div>
+    <label for="title">title</label> 
+    <input type="text" name="title" id="title" placeholder="story title">
+  </div>
+  <div>
+    <label for="url">url</label> 
+    <input type="url" name="url" id="story-url" placeholder="story url">
+  </div>
   <button type="submit">submit</button>
+  <hr>
 </form>
-
-<hr class="hidden">
 
 <!-- area for stories (all stories, user stories, favorites) -->
 <section class="stories-container container">
@@ -72,10 +80,10 @@
   <ol id="all-stories-list" class="stories-list"></ol>
 
   <!-- List for favorite stories -->
-  <ol id="#favorites-list" class="favorites-list"></ol>
+  <ol id="favorites-list" class="stories-list"></ol>
 
   <!-- List of currentUser stories -->
-  <ol id="#user-stories"></ol>
+  <ol id="user-stories" class=""></ol>
 
 </section>
 

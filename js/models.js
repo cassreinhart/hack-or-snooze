@@ -1,7 +1,7 @@
 "use strict";
 
 const BASE_URL = "https://hack-or-snooze-v3.herokuapp.com";
-const tokenn = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRlc3RjcmVpbiIsImlhdCI6MTY2MjM5OTc5MX0.QUbbbP7ZXD0jgS9V9h7n8innsBSLw7NTWrBbjMtLXsw";
+
 /******************************************************************************
  * Story: a single story in the system
  */
@@ -24,7 +24,6 @@ class Story {
   /** Parses hostname out of URL and returns it. */
 
   getHostName() {
-    
     return new URL(this.url).host;
   }
 }
@@ -82,24 +81,31 @@ class StoryList {
     });
 
     const story = new Story(response.data.story);
-    this.stories.unshift(story);
-    user.ownStories.unshift(story);
+    this.stories.unshift(story); //add story to front of stories array
+    user.ownStories.unshift(story); //add to front of user ownStories array
     
-    return story;
+    return story; 
   } 
 
-  async removeStory(user, story) { ///////////////////////
-    const token = user.loginToken;
+  async removeStory(story) { ///////////////////////
+    
+    const token = currentUser.loginToken;
     const storyId = story.storyId;
-    const response = await axios({ //remove from API
+    await axios({ //remove from API
       method: "DELETE",
       url: `${BASE_URL}/stories/${storyId}`,
       data: {token}
     });
-    $(`${storyId}`).remove()//remove from the DOM
+    //filter the story being removed by its id
+    this.stories = this.stories.filter(story => story.storyId !== storyId);
 
-    await this.getStories(); //remove from storyList arr
-    putStoriesOnPage(); //not sure if I need to call this function to update the stories
+    //same for user story list & favorites
+    currentUser.ownStories = currentUser.ownStories.filter(s => s.storyId !== storyId);
+    currentUser.favorites = currentUser.favorites.filter(s => s.storyId !== storyId);
+    // $(`${storyId}`).remove()//remove from the DOM
+
+    // await this.getStories(); //remove from storyList arr
+    // putStoriesOnPage(); //not sure if I need to call this function to update the stories
   }
 }
 
@@ -220,29 +226,35 @@ class User {
     }
   }
 
-  isFavorite(story) { //see getStarHTML -- adds a specific type of star to the DOM (filled/empty)
-    this.favorites.includes(story); 
+  isFavorite(storyId) { //see getStarHTML -- adds a specific type of star to the DOM (filled/empty)
+    let result = this.favorites.some(story => {
+      return story.storyId === storyId;
+    })
+    // console.log(result, storyId)
+    return result;
   }
 
-  async favoriteStory(story) { //toggle?
+  async favoriteStory(storyId) { //toggle?
     console.debug("favoriteStory");
-    this.favorites.push(story); //adds story to end favorites array
-    await this._addOrRemoveFav("add", story);
-    //create favorite in user.favorites property
+
+    this.favorites.push(storyId); //adds story to end of user favorites array
+    await this._addOrRemoveFav("add", storyId); //add favorite story to API
   }
-  async removeFavorite(story) { //how do we know where in the array the story is that we want to unfav ?????
+  async removeFavorite(storyId) {
     console.debug("removeFavorite");
-    this.favorites.unshift(story); //removes from beginning of favorites array //////// ??
-    await this._addOrRemoveFav("remove", story);
+    
+    this.favorites = this.favorites.filter(s => s.storyId !== storyId);
+    await this._addOrRemoveFav("remove", storyId);
   }
 
-  async _addOrRemoveFav(newState, story) { //add/remove from API
+  async _addOrRemoveFav(newState, storyId) { //add/remove from API
     const token = this.loginToken;
     const method = newState === "add" ? 'POST' : 'DELETE';
-    await axios({
-      url: `${BASE_URL}/users/${this.username}/favorites/${story.storyId}`,
+    let response = await axios({
+      url: `${BASE_URL}/users/${this.username}/favorites/${storyId}`,
       method: method,
       data: {token}
     }); //do not need to use localStorage because the data is saved in the API under currentUser username
+    console.log(this);// this.favorites = response.user.favorites;//add to this.favorites
   }
 }

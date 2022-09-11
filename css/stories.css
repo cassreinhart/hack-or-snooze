@@ -38,7 +38,12 @@
   display: block;
 }
 
-.star, .trash {
+.fa-trash {
+  font-size: .75rem;
+  display: inline;
+  cursor: pointer;
+}
+.star {
   font-size: .75rem;
   margin: 0 2px;
   cursor: pointer;
