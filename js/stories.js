@@ -39,6 +39,13 @@ function generateStoryMarkup(story) {
     `);
 }
 
+function storyIsCurrentUserStory(story) {
+  // for (let story in storyList.stories) {
+    currentUser.ownStories.includes(story) ? true : false;
+  // }
+  
+}
+
 /** Gets list of stories from server, generates their HTML, and puts on page. */
 
 async function putStoriesOnPage() {
@@ -49,11 +56,22 @@ async function putStoriesOnPage() {
 
   // loop through all of our stories and generate HTML for them
   for (let story of storyList.stories) {
+    
     const $story = generateStoryMarkup(story);
     $allStoriesList.append($story);
   }
   
   $allStoriesList.show();
+}
+
+function putCurrentUserStoriesOnPage(currentUser) {
+  const ownStories = currentUser.ownStories;
+
+  for (let story of ownStories) {
+    const $userStory = generateStoryMarkup(story)
+    console.log(story);
+    $userStories.append($userStory); 
+  }
 }
 
 function submitNewStory(evt) {
@@ -76,6 +94,17 @@ function submitNewStory(evt) {
 }
 
 $submitStoryForm.on("submit", submitNewStory);
+
+function deleteStory(evt) {
+  console.debug('deleteStory');
+  $userStories.empty();
+
+  const $closestLi = $(evt.target).closest('li');
+  const storyId = $closestLi.attr('id');
+
+  storyList.removeStory(storyId);
+  putCurrentUserStoriesOnPage(currentUser);
+}
 
 function getTrashCanHTML() {
   return `<i class='fas fa-trash fa-9x' 
@@ -136,4 +165,4 @@ $storiesLists.on("click", ".star", toggleStar);
 // $star.on("click", toggleStar); ///////this isn't working either- issue with selector??
 
 // $trash.on('click', storyList.removeStory(evt.target.closest('li'))); //////////
-$trash.on('click', storyList.removeStory);
+$userStories.on('click', '.fa-trash', deleteStory);

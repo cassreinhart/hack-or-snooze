@@ -44,21 +44,19 @@ function navSubmitClick(evt) {
 $navSubmitStory.on("click", navSubmitClick);
 
 function navUserStories(evt) {
+  $userStories.empty();
   console.debug("navUserStories", evt);
   // evt.preventDefault();
   const ownStories = currentUser.ownStories;
 
   hidePageComponents();
-  for (let story of ownStories) {
-    const $userStory = generateStoryMarkup(story)
-    console.log(story);
-    $userStories.append($userStory); //user stories is the ol, so this won't work to append a story
-  }
-  // for (let story of storyList) {
-  //   if (story.username === user.username)  {
-  //     $userStories.prepend(story);
-  //   }
+  putCurrentUserStoriesOnPage(currentUser);
+  // for (let story of ownStories) {
+  //   const $userStory = generateStoryMarkup(story)
+  //   console.log(story);
+  //   $userStories.append($userStory); //user stories is the ol, so this won't work to append a story
   // }
+  
   $userStories.show();
 }
 
@@ -66,6 +64,7 @@ $navMyStories.on('click', navUserStories);
 
 function putFavoritesOnPage() {
   console.debug("putFavoritesOnPage");
+  $favoritesList.empty();
 
   hidePageComponents();
   console.log($favoritesList.length);

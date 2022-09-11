@@ -87,10 +87,10 @@ class StoryList {
     return story; 
   } 
 
-  async removeStory(story) { ///////////////////////
+  async removeStory(storyId) { ///////////////////////
     
     const token = currentUser.loginToken;
-    const storyId = story.storyId;
+    // const storyId = story.storyId;
     await axios({ //remove from API
       method: "DELETE",
       url: `${BASE_URL}/stories/${storyId}`,
