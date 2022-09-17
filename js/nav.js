@@ -14,6 +14,7 @@ function navAllStories(evt) {
 
 $body.on("click", "#nav-all", navAllStories);
 
+
 /** Show login/signup on click on "login" */
 
 function navLoginClick(evt) {
