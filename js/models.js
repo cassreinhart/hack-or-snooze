@@ -82,12 +82,13 @@ class StoryList {
 
     const story = new Story(response.data.story);
     this.stories.unshift(story); //add story to front of stories array
+    console.log(story)
     user.ownStories.unshift(story); //add to front of user ownStories array
     
     return story; 
   } 
 
-  async removeStory(storyId) { ///////////////////////
+  async removeStory(storyId) {
     
     const token = currentUser.loginToken;
     // const storyId = story.storyId;
@@ -102,10 +103,6 @@ class StoryList {
     //same for user story list & favorites
     currentUser.ownStories = currentUser.ownStories.filter(s => s.storyId !== storyId);
     currentUser.favorites = currentUser.favorites.filter(s => s.storyId !== storyId);
-    // $(`${storyId}`).remove()//remove from the DOM
-
-    // await this.getStories(); //remove from storyList arr
-    // putStoriesOnPage(); //not sure if I need to call this function to update the stories
   }
 }
 
@@ -234,22 +231,23 @@ class User {
     return result;
   }
 
-  async favoriteStory(storyId) { //toggle?
+  async favoriteStory(story) { //toggle?
     console.debug("favoriteStory");
 
-    this.favorites.push(storyId); //adds story to end of user favorites array
-    await this._addOrRemoveFav("add", storyId); //add favorite story to API
+    this.favorites.push(story.storyId); //adds story to end of user favorites array
+    await this._addOrRemoveFav("add", story.storyId); //add favorite story to API
   }
-  async removeFavorite(storyId) {
+
+  async removeFavorite(story) {
     console.debug("removeFavorite");
     
-    this.favorites = this.favorites.filter(s => s.storyId !== storyId);
-    await this._addOrRemoveFav("remove", storyId);
+    this.favorites = this.favorites.filter(s => s.storyId !== story.storyId); //set user favorites to a filtered version (without the corresponding story)
+    await this._addOrRemoveFav("remove", story.storyId); //call fn to remove from API
   }
 
   async _addOrRemoveFav(newState, storyId) { //add/remove from API
     const token = this.loginToken;
-    const method = newState === "add" ? 'POST' : 'DELETE';
+    const method = newState === "add" ? 'POST' : 'DELETE'; //post / delete request
     let response = await axios({
       url: `${BASE_URL}/users/${this.username}/favorites/${storyId}`,
       method: method,

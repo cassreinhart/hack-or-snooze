@@ -40,28 +40,12 @@ function generateStoryMarkup(story) {
 }
 
 function storyIsCurrentUserStory(story) {
-  // for (let story in storyList.stories) {
-    currentUser.ownStories.includes(story) ? true : false;
-  // }
-  
-}
+    return currentUser.ownStories.includes(story) ? true : false;
+} // did not end up implementing this function due to bug
 
-/** Gets list of stories from server, generates their HTML, and puts on page. */
-
-async function putStoriesOnPage() {
-  console.debug("putStoriesOnPage");
-
-  $allStoriesList.empty();
-  console.log(storyList);
-
-  // loop through all of our stories and generate HTML for them
-  for (let story of storyList.stories) {
-    
-    const $story = generateStoryMarkup(story);
-    $allStoriesList.append($story);
-  }
-  
-  $allStoriesList.show();
+function getTrashCanHTML() {
+  return `<i class='fas fa-trash fa-9x' 
+          style='color:#808080'></i>`
 }
 
 function putCurrentUserStoriesOnPage(currentUser) {
@@ -72,43 +56,6 @@ function putCurrentUserStoriesOnPage(currentUser) {
     console.log(story);
     $userStories.append($userStory); 
   }
-}
-
-function submitNewStory(evt) {
-  console.debug("submitNewStory");
-  evt.preventDefault();
-  console.debug("submitNewStory");
-
-  const author = $("#author").val();
-  const title = $("#title").val();
-  const url = $("#story-url").val();
-  const user = currentUser;
-  const storyData = {author, title, url};
-
-  const story = storyList.addStory(user, storyData);
-  const $story = generateStoryMarkup(story);
-  $allStoriesList.prepend($story);
-
-  $submitStoryForm.slideUp(1000);
-  $submitStoryForm.trigger('reset');
-}
-
-$submitStoryForm.on("submit", submitNewStory);
-
-function deleteStory(evt) {
-  console.debug('deleteStory');
-  $userStories.empty();
-
-  const $closestLi = $(evt.target).closest('li');
-  const storyId = $closestLi.attr('id');
-
-  storyList.removeStory(storyId);
-  putCurrentUserStoriesOnPage(currentUser);
-}
-
-function getTrashCanHTML() {
-  return `<i class='fas fa-trash fa-9x' 
-          style='color:#808080'></i>`
 }
 
 function generateFavoriteMarkup(story) {
@@ -137,6 +84,59 @@ function getStarHTML(story, user) {
           </span>`;
 }
 
+/** Gets list of stories from server, generates their HTML, and puts on page. */
+
+async function putStoriesOnPage() {
+  console.debug("putStoriesOnPage");
+
+  $allStoriesList.empty();
+  console.log(storyList);
+
+  // loop through all of our stories and generate HTML for them
+  for (let story of storyList.stories) {
+    console.log(story)
+    const $story = generateStoryMarkup(story);
+    $allStoriesList.append($story);
+  }
+  
+  $allStoriesList.show();
+}
+
+async function submitNewStory(evt) {
+  console.debug("submitNewStory");
+  evt.preventDefault();
+  console.debug("submitNewStory");
+
+  //get data from form
+  const author = $("#author").val();
+  const title = $("#title").val();
+  const url = $("#story-url").val();
+  const user = currentUser;
+  const storyData = {author, title, url};
+
+// create story from data and add story to the page
+  const story = await storyList.addStory(user, storyData);
+  console.log(story)
+  const $story = generateStoryMarkup(story);
+  $allStoriesList.prepend($story);
+
+  $submitStoryForm.slideUp(1000);
+  $submitStoryForm.trigger('reset');
+}
+
+$submitStoryForm.on("submit", submitNewStory);
+
+function deleteStory(evt) {
+  console.debug('deleteStory');
+  $userStories.empty();
+
+  const $closestLi = $(evt.target).closest('li');
+  const storyId = $closestLi.attr('id');
+
+  storyList.removeStory(storyId);
+  putCurrentUserStoriesOnPage(currentUser);
+}
+
 function toggleStar(evt) {
   evt.preventDefault();
   const $target = evt.target;
@@ -144,25 +144,26 @@ function toggleStar(evt) {
   const storyLi = $star.closest('li');
   console.log(storyLi);
   const storyId = storyLi.id; 
+  let story = storyList.filter(story => {
+    return story.id == storyId
+  })[0] //gives us the actual story object
 
   //retrieve story object, use the object to pass into 
   if ($star.classList.contains("far")) {
     // $star.closest('i').toggleClass("fas far");
     $star.classList.remove("far");
     $star.classList.add("fas"); //change to "filled" star
-    currentUser.favoriteStory(storyId); //add story to favorites array 
+    currentUser.favoriteStory(story); //add story to favorites array 
   } else {
     // $star.closest('i').toggleClass("fas far");
     $star.classList.remove("fas");
     $star.classList.add("far"); //keep as empty star
-    currentUser.removeFavorite(storyId);
+    currentUser.removeFavorite(story);
     return currentUser.favorites = currentUser.favorites.filter(story => {
       storyId !== story.id;
     }); //return new arr
   }
 }
 $storiesLists.on("click", ".star", toggleStar);
-// $star.on("click", toggleStar); ///////this isn't working either- issue with selector??
 
-// $trash.on('click', storyList.removeStory(evt.target.closest('li'))); //////////
 $userStories.on('click', '.fa-trash', deleteStory);
