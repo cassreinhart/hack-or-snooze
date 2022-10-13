@@ -253,6 +253,7 @@ class User {
       method: method,
       data: {token}
     }); //do not need to use localStorage because the data is saved in the API under currentUser username
-    console.log(this);// this.favorites = response.user.favorites;//add to this.favorites
+    console.log(this);
+    this.favorites = response.user.favorites;//add to this.favorites
   }
 }

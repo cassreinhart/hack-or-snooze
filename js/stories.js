@@ -21,10 +21,9 @@ async function getAndShowStoriesOnStart() {
 
 function generateStoryMarkup(story) {
   console.debug("generateStoryMarkup", story);
-  const showStar = Boolean(currentUser);
+  const showStar = Boolean(currentUser); //if logged in, show fav/unfav star
   const hostName = story.getHostName();
-  console.log(currentUser.ownStories);
-  console.log(currentUser.ownStories.includes(story.storyId));
+  
   return $(`
       <li id="${story.storyId}">
       ${showStar ? getStarHTML(story, currentUser) : ""}
@@ -90,11 +89,9 @@ async function putStoriesOnPage() {
   console.debug("putStoriesOnPage");
 
   $allStoriesList.empty();
-  console.log(storyList);
 
   // loop through all of our stories and generate HTML for them
   for (let story of storyList.stories) {
-    console.log(story)
     const $story = generateStoryMarkup(story);
     $allStoriesList.append($story);
   }
@@ -142,20 +139,14 @@ function toggleStar(evt) {
   const $target = evt.target;
   const $star = $target.closest('i');
   const storyLi = $star.closest('li');
-  console.log(storyLi);
   const storyId = storyLi.id; 
-  let story = storyList.filter(story => {
-    return story.id == storyId
-  })[0] //gives us the actual story object
 
   //retrieve story object, use the object to pass into 
   if ($star.classList.contains("far")) {
-    // $star.closest('i').toggleClass("fas far");
     $star.classList.remove("far");
     $star.classList.add("fas"); //change to "filled" star
     currentUser.favoriteStory(story); //add story to favorites array 
   } else {
-    // $star.closest('i').toggleClass("fas far");
     $star.classList.remove("fas");
     $star.classList.add("far"); //keep as empty star
     currentUser.removeFavorite(story);
@@ -164,6 +155,7 @@ function toggleStar(evt) {
     }); //return new arr
   }
 }
+
 $storiesLists.on("click", ".star", toggleStar);
 
 $userStories.on('click', '.fa-trash', deleteStory);

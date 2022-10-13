@@ -45,18 +45,13 @@ function navSubmitClick(evt) {
 $navSubmitStory.on("click", navSubmitClick);
 
 function navUserStories(evt) {
-  $userStories.empty();
   console.debug("navUserStories", evt);
-  // evt.preventDefault();
+  
+  $userStories.empty();
   const ownStories = currentUser.ownStories;
 
   hidePageComponents();
   putCurrentUserStoriesOnPage(currentUser);
-  // for (let story of ownStories) {
-  //   const $userStory = generateStoryMarkup(story)
-  //   console.log(story);
-  //   $userStories.append($userStory); //user stories is the ol, so this won't work to append a story
-  // }
   
   $userStories.show();
 }
@@ -68,20 +63,15 @@ function putFavoritesOnPage() {
   $favoritesList.empty();
 
   hidePageComponents();
-  console.log($favoritesList.length);
-  console.log(currentUser.favorites.length);
-  // if ($favoritesList.length < currentUser.favorites.length){
-    if (currentUser.favorites.length === 0) {
-      $favoritesList.append("<h3 id='no-favs-yet'>No Favorites Yet!</h3>");
-    } else {
-      for (let story of currentUser.favorites) {
-        const $favoriteStory = generateFavoriteMarkup(story);
-        console.log($favoriteStory);
-        $favoritesList.append($favoriteStory);
-      }
+  
+  if (currentUser.favorites.length === 0) {
+    $favoritesList.append("<h3 id='no-favs-yet'>No Favorites Yet!</h3>");
+  } else {
+    for (let story of currentUser.favorites) {
+      const $favoriteStory = generateFavoriteMarkup(story);
+      $favoritesList.append($favoriteStory);
     }
-  //   return "Favorites"
-  // }
+  }
   $favoritesList.show();
 }
 

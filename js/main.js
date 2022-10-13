@@ -16,6 +16,8 @@ const $trash = $('.fa-trash');
 const $loginForm = $("#login-form");
 const $signupForm = $("#signup-form");
 
+const $navLink = $('.nav-link');
+const $navStoryFunctionality = $('#nav-story-functionality');
 const $navLogin = $("#nav-login");
 const $navUserProfile = $("#nav-user-profile");
 const $navLogOut = $("#nav-logout");
@@ -38,7 +40,6 @@ const $urlInput = $("#story-url");
 
 function hidePageComponents() {
   const components = [
-    $allStoriesList,
     $userStories,
     $favoritesList,
     $submitStoryForm,

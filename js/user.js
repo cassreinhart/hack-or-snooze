@@ -58,6 +58,8 @@ $signupForm.on("submit", signup);
 
 function logout(evt) {
   console.debug("logout", evt);
+
+  hideNavStoryFunctionality();
   localStorage.clear();
   location.reload();
 }
@@ -110,7 +112,20 @@ function saveUserCredentialsInLocalStorage() {
 function updateUIOnUserLogin() {
   console.debug("updateUIOnUserLogin");
 
-  $allStoriesList.show();
+  hidePageComponents();
 
+  //re-display stories (allows "favorite" stars to appear)
+  putStoriesOnPage();
+  $allStoriesList.show();
+  
+  $navStoryFunctionality.show();
   updateNavOnLogin();
+  // generateUserProfile();
 }
+
+// function generateUserProfile() {
+//   console.debug("generateUserProfile");
+
+//   $('#profile-name').text(currentUser.name);
+//   $('#profile-username').text(currentUser.username);
+// }
