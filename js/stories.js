@@ -33,7 +33,6 @@ function generateStoryMarkup(story) {
         <small class="story-hostname">(${hostName})</small>
         <small class="story-author">by ${story.author}</small>
         <small class="story-user">posted by ${story.username}</small>
-      ${currentUser.ownStories.includes(story) ? getTrashCanHTML() : ""}
       </li>
     `);
 }
@@ -51,7 +50,20 @@ function putCurrentUserStoriesOnPage(currentUser) {
   const ownStories = currentUser.ownStories;
 
   for (let story of ownStories) {
-    const $userStory = generateStoryMarkup(story)
+    const $userStory = function() {
+      return $(`
+    <li id="${story.storyId}">
+    ${showStar ? getStarHTML(story, currentUser) : ""}
+      <a href="${story.url}" target="a_blank" class="story-link">
+        ${story.title}
+      </a>
+      <small class="story-hostname">(${hostName})</small>
+      <small class="story-author">by ${story.author}</small>
+      <small class="story-user">posted by ${story.username}</small>
+    ${currentUser.ownStories.includes(story) ? getTrashCanHTML() : ""}
+    </li>
+  `);
+    }
     console.log(story);
     $userStories.append($userStory); 
   }

@@ -59,7 +59,7 @@ $signupForm.on("submit", signup);
 function logout(evt) {
   console.debug("logout", evt);
 
-  hideNavStoryFunctionality();
+  // hideNavStoryFunctionality();
   localStorage.clear();
   location.reload();
 }
