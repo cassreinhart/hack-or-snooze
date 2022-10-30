@@ -40,6 +40,7 @@ const $urlInput = $("#story-url");
 
 function hidePageComponents() {
   const components = [
+    $allStoriesList,
     $userStories,
     $favoritesList,
     $submitStoryForm,
