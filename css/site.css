@@ -50,7 +50,6 @@ a:hover {
 form {
   display: flex;
   flex-direction: column;
-  margin: 8px 18px 0;
 }
 
 form > * {
@@ -112,6 +111,22 @@ form > hr {
 @media screen and (max-width: 576px) {
   body {
     margin: 0;
+  }
+  #submit-story-form {
+    text-align: center;
+  }
+  #submit-story-form label {
+    text-align: center;
+  }
+  .form-container {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+  }
+  .form-container button {
+    margin: auto;
+    width: 7rem;
+    height: 3rem;
   }
 }
 
