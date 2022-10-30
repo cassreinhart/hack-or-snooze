@@ -48,6 +48,7 @@ function getTrashCanHTML() {
 
 function putCurrentUserStoriesOnPage(currentUser) {
   const ownStories = currentUser.ownStories;
+  const showStar = Boolean(currentUser);
 
   for (let story of ownStories) {
     const $userStory = function() {
